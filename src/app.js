@@ -158,19 +158,25 @@ map$.subscribe(obj=>{
 
 };
 
-var githubData$ = Rx.Observable.fromPromise(getUser("amyniovi"))
-.map(x=>{
-	return {
-	url:x.data.html_url,
-	avatar:x.data.avatar_url,
-	name:x.data.login
-};
 
-});
 
-githubData$.subscribe(x=>{
+var nameSource$ = Rx.Observable.fromEvent($('#name'), 'keyup');
+
+ nameSource$.subscribe(e=>{
+ Rx.Observable.fromPromise(getUser(e.target.value))
+.subscribe(x=>{
 	
 	
-	console.log(x);
-});
+	console.log(x.data);
+	$('#gituser').text (x.data.login || 'not found');
+    $('#avatar').attr('src', x.data.avatar_url || 'https://avatars3.githubusercontent.com/u/8865956?s=400&u=0059f0ad78ed0567f3e706f3256570fc61d02fb6&v=4');
+
+},err=>console.log(`error is this : ${err.message}`));
+
+
+ });	
+
+
+
+
 //.done();

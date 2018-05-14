@@ -212,18 +212,19 @@
 	  });
 	};
 
-	var githubData$ = _Rx2.default.Observable.fromPromise(getUser("amyniovi")).map(function (x) {
-	  return {
-	    url: x.data.html_url,
-	    avatar: x.data.avatar_url,
-	    name: x.data.login
-	  };
+	var nameSource$ = _Rx2.default.Observable.fromEvent((0, _jquery2.default)('#name'), 'keyup');
+
+	nameSource$.subscribe(function (e) {
+	  _Rx2.default.Observable.fromPromise(getUser(e.target.value)).subscribe(function (x) {
+
+	    console.log(x.data);
+	    (0, _jquery2.default)('#gituser').text(x.data.login || 'not found');
+	    (0, _jquery2.default)('#avatar').attr('src', x.data.avatar_url || 'https://avatars3.githubusercontent.com/u/8865956?s=400&u=0059f0ad78ed0567f3e706f3256570fc61d02fb6&v=4');
+	  }, function (err) {
+	    return console.log('error is this : ' + err.message);
+	  });
 	});
 
-	githubData$.subscribe(function (x) {
-
-	  console.log(x);
-	});
 	//.done();
 
 /***/ }),

@@ -114,7 +114,7 @@ map$.subscribe(obj=>{
  */
 
  //OBSERVABLE FROM PROMISES
-
+/*
  const myPromise = new Promise((resolve, reject)=>{
 
  	console.log('creating promise');
@@ -126,6 +126,7 @@ map$.subscribe(obj=>{
  	},3000);
  });
 
+ */
 /*
  myPromise
  .then(x=> 
@@ -136,6 +137,40 @@ map$.subscribe(obj=>{
  	);	
  	*/
 
+/*
  const source$ = Rx.Observable.fromPromise(myPromise);	
 
- source$.subscribe(x=>console.log(x));
+ source$.subscribe(x=>
+ 	console.log(`success: ${x}`),
+ 	err=>
+ 	console.log(`my  error is :  ${err} `));
+ 	*/
+
+ //OBSERVABLE FROM PROMISE (2)
+ 
+ function getUser(username){
+
+ return	$.ajax({
+ 	
+ 		url:`https://api.github.com/users/${username}`,
+ 		dataType: 'jsonp'
+ });
+
+};
+
+var githubData$ = Rx.Observable.fromPromise(getUser("amyniovi"))
+.map(x=>{
+	return {
+	url:x.data.html_url,
+	avatar:x.data.avatar_url,
+	name:x.data.login
+};
+
+});
+
+githubData$.subscribe(x=>{
+	
+	
+	console.log(x);
+});
+//.done();

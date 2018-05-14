@@ -169,17 +169,19 @@
 	 */
 
 	//OBSERVABLE FROM PROMISES
+	/*
+	 const myPromise = new Promise((resolve, reject)=>{
 
-	var myPromise = new Promise(function (resolve, reject) {
+	 	console.log('creating promise');
+	 	setTimeout(()=>{
+	 		
+	 		resolve('hey from promise');
+	 		throw new Error('bleh');
 
-	  console.log('creating promise');
-	  setTimeout(function () {
+	 	},3000);
+	 });
 
-	    resolve('hey from promise');
-	    throw new Error('bleh');
-	  }, 3000);
-	});
-
+	 */
 	/*
 	 myPromise
 	 .then(x=> 
@@ -190,11 +192,39 @@
 	 	);	
 	 	*/
 
-	var source$ = _Rx2.default.Observable.fromPromise(myPromise);
+	/*
+	 const source$ = Rx.Observable.fromPromise(myPromise);	
 
-	source$.subscribe(function (x) {
-	  return console.log(x);
+	 source$.subscribe(x=>
+	 	console.log(`success: ${x}`),
+	 	err=>
+	 	console.log(`my  error is :  ${err} `));
+	 	*/
+
+	//OBSERVABLE FROM PROMISE (2)
+
+	function getUser(username) {
+
+	  return _jquery2.default.ajax({
+
+	    url: 'https://api.github.com/users/' + username,
+	    dataType: 'jsonp'
+	  });
+	};
+
+	var githubData$ = _Rx2.default.Observable.fromPromise(getUser("amyniovi")).map(function (x) {
+	  return {
+	    url: x.data.html_url,
+	    avatar: x.data.avatar_url,
+	    name: x.data.login
+	  };
 	});
+
+	githubData$.subscribe(function (x) {
+
+	  console.log(x);
+	});
+	//.done();
 
 /***/ }),
 /* 1 */

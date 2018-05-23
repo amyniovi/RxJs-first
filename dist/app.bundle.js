@@ -203,29 +203,69 @@
 
 	//OBSERVABLE FROM PROMISE (2)
 
-	function getUser(username) {
+	//  function getUser(username){
 
-	  return _jquery2.default.ajax({
+	//  return	$.ajax({
 
-	    url: 'https://api.github.com/users/' + username,
-	    dataType: 'jsonp'
-	  });
-	};
+	//  		url:`https://api.github.com/users/${username}`,
+	//  		dataType: 'jsonp'
+	//  });
 
-	var nameSource$ = _Rx2.default.Observable.fromEvent((0, _jquery2.default)('#name'), 'keyup');
+	// };
 
-	nameSource$.subscribe(function (e) {
-	  _Rx2.default.Observable.fromPromise(getUser(e.target.value)).subscribe(function (x) {
+	// //double subscribe Event-Promise
 
-	    console.log(x.data);
-	    (0, _jquery2.default)('#gituser').text(x.data.login || 'not found');
-	    (0, _jquery2.default)('#avatar').attr('src', x.data.avatar_url || 'https://avatars3.githubusercontent.com/u/8865956?s=400&u=0059f0ad78ed0567f3e706f3256570fc61d02fb6&v=4');
-	  }, function (err) {
-	    return console.log('error is this : ' + err.message);
+	// var nameSource$ = Rx.Observable.fromEvent($('#name'), 'keyup');
+
+	//  nameSource$.subscribe(e=>{
+	//  Rx.Observable.fromPromise(getUser(e.target.value))
+	// .subscribe(x=>{
+
+
+	// 	console.log(x.data);
+	// 	$('#gituser').text (x.data.login || 'not found');
+	//     $('#avatar').attr('src', x.data.avatar_url || 'https://avatars3.githubusercontent.com/u/8865956?s=400&u=0059f0ad78ed0567f3e706f3256570fc61d02fb6&v=4');
+
+	// },err=>console.log(`error is this : ${err.message}`));
+
+
+	//  });	
+
+	//INTERVAL TIMER AND RANGE  
+
+	// const source$ = Rx.Observable.interval(1000).take(5);
+
+	// source$.subscribe(x=>console.log(x));
+
+	// const source$ = Rx.Observable.timer(5000,2000).take(5);
+
+	// source$.subscribe(x=>console.log(x));
+
+	// const source$ = Rx.Observable.range(10,10);
+
+	// source$.subscribe(x=>console.log(x));
+
+
+	//MERGE(same time) CONCAT(one after the other)
+
+	_Rx2.default.Observable.of('Hello').merge(_Rx2.default.Observable.of('Everyone')).subscribe(function (x) {
+	  return console.log(x);
+	});
+
+	//MERGE MAP - CONCAT MAP -SWITCH MAP 
+	// (STOP US FROM NESTING SUBSCRIBES)
+
+	_Rx2.default.Observable.from([1, 2, 3, 4, 5]).subscribe(function (v) {
+	  return _Rx2.default.Observable.of(v + "  emitted...").subscribe(function (x) {
+	    return console.log(x);
 	  });
 	});
 
-	//.done();
+	_Rx2.default.Observable.from([1, 2, 3, 4, 5]).map(function (v) {
+	  return v + " mapped ... ";
+	}).subscribe(function (x) {
+	  return console.log(x);
+	});
 
 /***/ }),
 /* 1 */

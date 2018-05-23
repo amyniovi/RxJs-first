@@ -148,35 +148,62 @@ map$.subscribe(obj=>{
 
  //OBSERVABLE FROM PROMISE (2)
  
- function getUser(username){
+//  function getUser(username){
 
- return	$.ajax({
+//  return	$.ajax({
  	
- 		url:`https://api.github.com/users/${username}`,
- 		dataType: 'jsonp'
- });
+//  		url:`https://api.github.com/users/${username}`,
+//  		dataType: 'jsonp'
+//  });
 
-};
+// };
 
+// //double subscribe Event-Promise
 
+// var nameSource$ = Rx.Observable.fromEvent($('#name'), 'keyup');
 
-var nameSource$ = Rx.Observable.fromEvent($('#name'), 'keyup');
-
- nameSource$.subscribe(e=>{
- Rx.Observable.fromPromise(getUser(e.target.value))
-.subscribe(x=>{
+//  nameSource$.subscribe(e=>{
+//  Rx.Observable.fromPromise(getUser(e.target.value))
+// .subscribe(x=>{
 	
 	
-	console.log(x.data);
-	$('#gituser').text (x.data.login || 'not found');
-    $('#avatar').attr('src', x.data.avatar_url || 'https://avatars3.githubusercontent.com/u/8865956?s=400&u=0059f0ad78ed0567f3e706f3256570fc61d02fb6&v=4');
+// 	console.log(x.data);
+// 	$('#gituser').text (x.data.login || 'not found');
+//     $('#avatar').attr('src', x.data.avatar_url || 'https://avatars3.githubusercontent.com/u/8865956?s=400&u=0059f0ad78ed0567f3e706f3256570fc61d02fb6&v=4');
 
-},err=>console.log(`error is this : ${err.message}`));
-
-
- });	
+// },err=>console.log(`error is this : ${err.message}`));
 
 
+//  });	
+
+//INTERVAL TIMER AND RANGE  
+
+// const source$ = Rx.Observable.interval(1000).take(5);
+
+// source$.subscribe(x=>console.log(x));
+
+// const source$ = Rx.Observable.timer(5000,2000).take(5);
+
+// source$.subscribe(x=>console.log(x));
+
+// const source$ = Rx.Observable.range(10,10);
+
+// source$.subscribe(x=>console.log(x));
 
 
-//.done();
+//MERGE(same time) CONCAT(one after the other)
+
+Rx.Observable.of('Hello')
+.merge(Rx.Observable.of('Everyone'))
+.subscribe(x=>console.log(x));
+
+//MERGE MAP - CONCAT MAP -SWITCH MAP 
+// (STOP US FROM NESTING SUBSCRIBES)
+
+Rx.Observable.from([1,2,3,4,5])
+	.subscribe(v=>  Rx.Observable.of(v+ "  emitted...")
+		.subscribe(x=>console.log(x)));
+
+	Rx.Observable.from([1,2,3,4,5])
+	.map(v=>v  + " mapped ... ")
+	.subscribe(x=>console.log(x));
